@@ -1,0 +1,1866 @@
+{
+  "nodes": [
+    {
+      "id": "sqliteAgentMemory_0",
+      "position": {
+        "x": -353.43481276889906,
+        "y": -249.93773206977775
+      },
+      "type": "customNode",
+      "data": {
+        "id": "sqliteAgentMemory_0",
+        "label": "SQLite Agent Memory",
+        "version": 1,
+        "name": "sqliteAgentMemory",
+        "type": "SQLiteAgentMemory",
+        "baseClasses": [
+          "SQLiteAgentMemory",
+          "BaseCheckpointSaver"
+        ],
+        "category": "Memory",
+        "description": "Memory for agentflow to remember the state of the conversation using SQLite database",
+        "inputParams": [
+          {
+            "label": "Additional Connection Configuration",
+            "name": "additionalConfig",
+            "type": "json",
+            "additionalParams": true,
+            "optional": true,
+            "id": "sqliteAgentMemory_0-input-additionalConfig-json"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "additionalConfig": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "sqliteAgentMemory_0-output-sqliteAgentMemory-SQLiteAgentMemory|BaseCheckpointSaver",
+            "name": "sqliteAgentMemory",
+            "label": "SQLiteAgentMemory",
+            "description": "Memory for agentflow to remember the state of the conversation using SQLite database",
+            "type": "SQLiteAgentMemory | BaseCheckpointSaver"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 253,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -353.43481276889906,
+        "y": -249.93773206977775
+      },
+      "dragging": false
+    },
+    {
+      "id": "supervisor_0",
+      "position": {
+        "x": 287.7740858209061,
+        "y": -168.69463634449443
+      },
+      "type": "customNode",
+      "data": {
+        "id": "supervisor_0",
+        "label": "Supervisor",
+        "version": 3,
+        "name": "supervisor",
+        "type": "Supervisor",
+        "baseClasses": [
+          "Supervisor"
+        ],
+        "category": "Multi Agents",
+        "inputParams": [
+          {
+            "label": "Supervisor Name",
+            "name": "supervisorName",
+            "type": "string",
+            "placeholder": "Supervisor",
+            "default": "Supervisor",
+            "id": "supervisor_0-input-supervisorName-string"
+          },
+          {
+            "label": "Supervisor Prompt",
+            "name": "supervisorPrompt",
+            "type": "string",
+            "description": "Prompt must contains {team_members}",
+            "rows": 4,
+            "default": "You are a supervisor tasked with managing a conversation between the following workers: {team_members}.\nGiven the following user request, respond with the worker to act next.\nEach worker will perform a task and respond with their results and status.\nWhen finished, respond with FINISH.\nSelect strategically to minimize the number of steps taken.",
+            "additionalParams": true,
+            "id": "supervisor_0-input-supervisorPrompt-string"
+          },
+          {
+            "label": "Summarization",
+            "name": "summarization",
+            "type": "boolean",
+            "description": "Return final output as a summarization of the conversation",
+            "optional": true,
+            "additionalParams": true,
+            "id": "supervisor_0-input-summarization-boolean"
+          },
+          {
+            "label": "Recursion Limit",
+            "name": "recursionLimit",
+            "type": "number",
+            "description": "Maximum number of times a call can recurse. If not provided, defaults to 100.",
+            "default": 100,
+            "additionalParams": true,
+            "id": "supervisor_0-input-recursionLimit-number"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tool Calling Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "description": "Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, GroqChat. Best result with GPT-4 model",
+            "id": "supervisor_0-input-model-BaseChatModel"
+          },
+          {
+            "label": "Agent Memory",
+            "name": "agentMemory",
+            "type": "BaseCheckpointSaver",
+            "description": "Save the state of the agent",
+            "optional": true,
+            "id": "supervisor_0-input-agentMemory-BaseCheckpointSaver"
+          },
+          {
+            "label": "Input Moderation",
+            "description": "Detect text that could generate harmful output and prevent it from being sent to the language model",
+            "name": "inputModeration",
+            "type": "Moderation",
+            "optional": true,
+            "list": true,
+            "id": "supervisor_0-input-inputModeration-Moderation"
+          }
+        ],
+        "inputs": {
+          "supervisorName": "Supervisor",
+          "supervisorPrompt": "Role: You are the Supervisor agent.\nMission: Orchestrate the full multi-agent workflow from first user input to final answer.\nTeam: pulumi_agent, github_agent, readme_builder_agent\nSuccess Signal: Return a single message beginning with “FINISH:” followed by the completed response for the user.",
+          "model": "{{awsChatBedrock_1.data.instance}}",
+          "agentMemory": "{{sqliteAgentMemory_0.data.instance}}",
+          "summarization": true,
+          "recursionLimit": 100,
+          "inputModeration": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "supervisor_0-output-supervisor-Supervisor",
+            "name": "supervisor",
+            "label": "Supervisor",
+            "description": "",
+            "type": "Supervisor"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 483,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 287.7740858209061,
+        "y": -168.69463634449443
+      },
+      "dragging": false
+    },
+    {
+      "id": "worker_0",
+      "position": {
+        "x": 1117.4508672587056,
+        "y": -278.91530004754406
+      },
+      "type": "customNode",
+      "data": {
+        "id": "worker_0",
+        "label": "Worker",
+        "version": 2,
+        "name": "worker",
+        "type": "Worker",
+        "baseClasses": [
+          "Worker"
+        ],
+        "category": "Multi Agents",
+        "inputParams": [
+          {
+            "label": "Worker Name",
+            "name": "workerName",
+            "type": "string",
+            "placeholder": "Worker",
+            "id": "worker_0-input-workerName-string"
+          },
+          {
+            "label": "Worker Prompt",
+            "name": "workerPrompt",
+            "type": "string",
+            "rows": 4,
+            "default": "You are a research assistant who can search for up-to-date info using search engine.",
+            "id": "worker_0-input-workerPrompt-string"
+          },
+          {
+            "label": "Format Prompt Values",
+            "name": "promptValues",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "id": "worker_0-input-promptValues-json"
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "worker_0-input-maxIterations-number"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "worker_0-input-tools-Tool"
+          },
+          {
+            "label": "Supervisor",
+            "name": "supervisor",
+            "type": "Supervisor",
+            "id": "worker_0-input-supervisor-Supervisor"
+          },
+          {
+            "label": "Tool Calling Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "description": "Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat. If not specified, supervisor's model will be used",
+            "id": "worker_0-input-model-BaseChatModel"
+          }
+        ],
+        "inputs": {
+          "workerName": "pulumi_agent",
+          "workerPrompt": "Role: Pulumi Agent – a specialised Worker that designs, builds, and explains cloud infrastructure with Pulumi.\nCalled by: the Supervisor node. Perform exactly one delegated task at a time and return the result to the Supervisor.",
+          "tools": [
+            "{{customMCP_6.data.instance}}"
+          ],
+          "supervisor": "{{supervisor_0.data.instance}}",
+          "model": "{{awsChatBedrock_0.data.instance}}",
+          "promptValues": "",
+          "maxIterations": ""
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 723,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1117.4508672587056,
+        "y": -278.91530004754406
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_0",
+      "position": {
+        "x": 2203.9202063047246,
+        "y": -200.39761851833978
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_0",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_0-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_0-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  //\"command\": \"docker\",\n  //\"args\": [\n  //   \"run\", \n  //    \"-i\", \n  //   \"-v\",\n  //    \"/tmp/mcp:/tmp/mcp\",\n  //    \"--rm\", \n  //    \"-e\",\n  //    \"PULUMI_ACCESS_TOKEN\",\n  //    \"pulumi/mcp-server:latest\",\n  //    \"stdio\"\n  //],\n  //\"env\": {\n  //  \"PULUMI_ACCESS_TOKEN\": \"<replace>\"\n  //}\n}\n\n",
+          "mcpActions": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_0-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 543,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2203.9202063047246,
+        "y": -200.39761851833978
+      },
+      "dragging": false
+    },
+    {
+      "id": "awsChatBedrock_0",
+      "position": {
+        "x": 1473.1976680388,
+        "y": -210.92666099378135
+      },
+      "type": "customNode",
+      "data": {
+        "id": "awsChatBedrock_0",
+        "label": "AWS ChatBedrock",
+        "version": 6,
+        "name": "awsChatBedrock",
+        "type": "AWSChatBedrock",
+        "baseClasses": [
+          "AWSChatBedrock",
+          "BaseChatModel",
+          "BaseLanguageModel",
+          "Runnable"
+        ],
+        "category": "Chat Models",
+        "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+        "inputParams": [
+          {
+            "label": "AWS Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "awsApi"
+            ],
+            "optional": true,
+            "id": "awsChatBedrock_0-input-credential-credential"
+          },
+          {
+            "label": "Region",
+            "name": "region",
+            "type": "asyncOptions",
+            "loadMethod": "listRegions",
+            "default": "us-east-1",
+            "id": "awsChatBedrock_0-input-region-asyncOptions"
+          },
+          {
+            "label": "Model Name",
+            "name": "model",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "default": "anthropic.claude-3-haiku-20240307-v1:0",
+            "id": "awsChatBedrock_0-input-model-asyncOptions"
+          },
+          {
+            "label": "Custom Model Name",
+            "name": "customModel",
+            "description": "If provided, will override model selected from Model Name option",
+            "type": "string",
+            "optional": true,
+            "id": "awsChatBedrock_0-input-customModel-string"
+          },
+          {
+            "label": "Streaming",
+            "name": "streaming",
+            "type": "boolean",
+            "default": true,
+            "optional": true,
+            "additionalParams": true,
+            "id": "awsChatBedrock_0-input-streaming-boolean"
+          },
+          {
+            "label": "Temperature",
+            "name": "temperature",
+            "type": "number",
+            "step": 0.1,
+            "description": "Temperature parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 0.7,
+            "id": "awsChatBedrock_0-input-temperature-number"
+          },
+          {
+            "label": "Max Tokens to Sample",
+            "name": "max_tokens_to_sample",
+            "type": "number",
+            "step": 10,
+            "description": "Max Tokens parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 200,
+            "id": "awsChatBedrock_0-input-max_tokens_to_sample-number"
+          },
+          {
+            "label": "Allow Image Uploads",
+            "name": "allowImageUploads",
+            "type": "boolean",
+            "description": "Allow image input. Refer to the <a href=\"https://docs.flowiseai.com/using-flowise/uploads#image\" target=\"_blank\">docs</a> for more details.",
+            "default": false,
+            "optional": true,
+            "id": "awsChatBedrock_0-input-allowImageUploads-boolean"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Cache",
+            "name": "cache",
+            "type": "BaseCache",
+            "optional": true,
+            "id": "awsChatBedrock_0-input-cache-BaseCache"
+          }
+        ],
+        "inputs": {
+          "cache": "",
+          "region": "eu-central-1",
+          "model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "customModel": "eu.anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "streaming": true,
+          "temperature": 0.7,
+          "max_tokens_to_sample": "8192",
+          "allowImageUploads": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "awsChatBedrock_0-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+            "name": "awsChatBedrock",
+            "label": "AWSChatBedrock",
+            "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+            "type": "AWSChatBedrock | BaseChatModel | BaseLanguageModel | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 766,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1473.1976680388,
+        "y": -210.92666099378135
+      },
+      "dragging": false
+    },
+    {
+      "id": "worker_1",
+      "position": {
+        "x": 967.8862568745001,
+        "y": 1285.409630429761
+      },
+      "type": "customNode",
+      "data": {
+        "id": "worker_1",
+        "label": "Worker",
+        "version": 2,
+        "name": "worker",
+        "type": "Worker",
+        "baseClasses": [
+          "Worker"
+        ],
+        "category": "Multi Agents",
+        "inputParams": [
+          {
+            "label": "Worker Name",
+            "name": "workerName",
+            "type": "string",
+            "placeholder": "Worker",
+            "id": "worker_1-input-workerName-string"
+          },
+          {
+            "label": "Worker Prompt",
+            "name": "workerPrompt",
+            "type": "string",
+            "rows": 4,
+            "default": "You are a research assistant who can search for up-to-date info using search engine.",
+            "id": "worker_1-input-workerPrompt-string"
+          },
+          {
+            "label": "Format Prompt Values",
+            "name": "promptValues",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "id": "worker_1-input-promptValues-json"
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "worker_1-input-maxIterations-number"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "worker_1-input-tools-Tool"
+          },
+          {
+            "label": "Supervisor",
+            "name": "supervisor",
+            "type": "Supervisor",
+            "id": "worker_1-input-supervisor-Supervisor"
+          },
+          {
+            "label": "Tool Calling Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "description": "Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat. If not specified, supervisor's model will be used",
+            "id": "worker_1-input-model-BaseChatModel"
+          }
+        ],
+        "inputs": {
+          "workerName": "aws_docs_guide",
+          "workerPrompt": "\n### 1. Mission\n\nYou are **AWS Docs Guide**, an AI assistant that helps builders quickly locate, understand, and apply official AWS documentation and best practices. Your job is to deliver accurate answers, runnable examples, and clear explanations rooted in the latest AWS docs. \n\n### 2. Core Skills\n\n-   **Search Documentation** – query the official AWS docs search API for precise results. \n    \n-   **Read Documentation** – fetch any AWS doc page and convert it to Markdown for easy quoting or summarization. \n    \n-   **Recommend Related Content** – surface follow-up pages, tutorials, or best-practice guides that deepen understanding. \n    \n-   **Explain and Teach** – break down service concepts, quotas, IAM policies, pricing models, and architectural patterns.\n    \n-   **Provide Code Snippets** – return AWS CLI, CloudFormation, CDK, or SDK examples that match the documentation.\n    \n-   **Highlight Gotchas** – call out regional limits, service prerequisites, or deprecated features.\n    \n\n----------\n\n### 3. Response Style\n\n-   Friendly, concise, and actionable—write like a helpful teammate.\n    \n-   Cite every fact grounded in documentation.\n    \n-   When showing code, include comments that map lines back to doc sections.\n    \n-   Use bullet lists or numbered steps for clarity; avoid em dashes.",
+          "tools": [
+            "{{customMCP_2.data.instance}}"
+          ],
+          "supervisor": "",
+          "model": "{{awsChatBedrock_2.data.instance}}",
+          "promptValues": "",
+          "maxIterations": ""
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 723,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 967.8862568745001,
+        "y": 1285.409630429761
+      },
+      "dragging": false
+    },
+    {
+      "id": "awsChatBedrock_1",
+      "position": {
+        "x": -360.9686640003436,
+        "y": 97.74007727161961
+      },
+      "type": "customNode",
+      "data": {
+        "id": "awsChatBedrock_1",
+        "label": "AWS ChatBedrock",
+        "version": 6,
+        "name": "awsChatBedrock",
+        "type": "AWSChatBedrock",
+        "baseClasses": [
+          "AWSChatBedrock",
+          "BaseChatModel",
+          "BaseLanguageModel",
+          "Runnable"
+        ],
+        "category": "Chat Models",
+        "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+        "inputParams": [
+          {
+            "label": "AWS Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "awsApi"
+            ],
+            "optional": true,
+            "id": "awsChatBedrock_1-input-credential-credential"
+          },
+          {
+            "label": "Region",
+            "name": "region",
+            "type": "asyncOptions",
+            "loadMethod": "listRegions",
+            "default": "us-east-1",
+            "id": "awsChatBedrock_1-input-region-asyncOptions"
+          },
+          {
+            "label": "Model Name",
+            "name": "model",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "default": "anthropic.claude-3-haiku-20240307-v1:0",
+            "id": "awsChatBedrock_1-input-model-asyncOptions"
+          },
+          {
+            "label": "Custom Model Name",
+            "name": "customModel",
+            "description": "If provided, will override model selected from Model Name option",
+            "type": "string",
+            "optional": true,
+            "id": "awsChatBedrock_1-input-customModel-string"
+          },
+          {
+            "label": "Streaming",
+            "name": "streaming",
+            "type": "boolean",
+            "default": true,
+            "optional": true,
+            "additionalParams": true,
+            "id": "awsChatBedrock_1-input-streaming-boolean"
+          },
+          {
+            "label": "Temperature",
+            "name": "temperature",
+            "type": "number",
+            "step": 0.1,
+            "description": "Temperature parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 0.7,
+            "id": "awsChatBedrock_1-input-temperature-number"
+          },
+          {
+            "label": "Max Tokens to Sample",
+            "name": "max_tokens_to_sample",
+            "type": "number",
+            "step": 10,
+            "description": "Max Tokens parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 200,
+            "id": "awsChatBedrock_1-input-max_tokens_to_sample-number"
+          },
+          {
+            "label": "Allow Image Uploads",
+            "name": "allowImageUploads",
+            "type": "boolean",
+            "description": "Allow image input. Refer to the <a href=\"https://docs.flowiseai.com/using-flowise/uploads#image\" target=\"_blank\">docs</a> for more details.",
+            "default": false,
+            "optional": true,
+            "id": "awsChatBedrock_1-input-allowImageUploads-boolean"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Cache",
+            "name": "cache",
+            "type": "BaseCache",
+            "optional": true,
+            "id": "awsChatBedrock_1-input-cache-BaseCache"
+          }
+        ],
+        "inputs": {
+          "cache": "",
+          "region": "eu-central-1",
+          "model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "customModel": "eu.anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "streaming": true,
+          "temperature": 0.7,
+          "max_tokens_to_sample": "8192",
+          "allowImageUploads": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "awsChatBedrock_1-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+            "name": "awsChatBedrock",
+            "label": "AWSChatBedrock",
+            "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+            "type": "AWSChatBedrock | BaseChatModel | BaseLanguageModel | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 766,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -360.9686640003436,
+        "y": 97.74007727161961
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_2",
+      "position": {
+        "x": 1300.2823383650207,
+        "y": 1284.9316152616605
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_2",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_2-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_2-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n        \"command\": \"uvx\",\n        \"args\": [\"awslabs.aws-documentation-mcp-server@latest\"],\n        \"env\": {\n          \"FASTMCP_LOG_LEVEL\": \"ERROR\"\n        },\n        \"disabled\": false,\n        \"autoApprove\": []\n}",
+          "mcpActions": "[\"search_documentation\",\"read_documentation\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_2-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 599,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1300.2823383650207,
+        "y": 1284.9316152616605
+      },
+      "dragging": false
+    },
+    {
+      "id": "awsChatBedrock_2",
+      "position": {
+        "x": 574.9064816270808,
+        "y": 1267.2043742232154
+      },
+      "type": "customNode",
+      "data": {
+        "id": "awsChatBedrock_2",
+        "label": "AWS ChatBedrock",
+        "version": 6,
+        "name": "awsChatBedrock",
+        "type": "AWSChatBedrock",
+        "baseClasses": [
+          "AWSChatBedrock",
+          "BaseChatModel",
+          "BaseLanguageModel",
+          "Runnable"
+        ],
+        "category": "Chat Models",
+        "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+        "inputParams": [
+          {
+            "label": "AWS Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "awsApi"
+            ],
+            "optional": true,
+            "id": "awsChatBedrock_2-input-credential-credential"
+          },
+          {
+            "label": "Region",
+            "name": "region",
+            "type": "asyncOptions",
+            "loadMethod": "listRegions",
+            "default": "us-east-1",
+            "id": "awsChatBedrock_2-input-region-asyncOptions"
+          },
+          {
+            "label": "Model Name",
+            "name": "model",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "default": "anthropic.claude-3-haiku-20240307-v1:0",
+            "id": "awsChatBedrock_2-input-model-asyncOptions"
+          },
+          {
+            "label": "Custom Model Name",
+            "name": "customModel",
+            "description": "If provided, will override model selected from Model Name option",
+            "type": "string",
+            "optional": true,
+            "id": "awsChatBedrock_2-input-customModel-string"
+          },
+          {
+            "label": "Streaming",
+            "name": "streaming",
+            "type": "boolean",
+            "default": true,
+            "optional": true,
+            "additionalParams": true,
+            "id": "awsChatBedrock_2-input-streaming-boolean"
+          },
+          {
+            "label": "Temperature",
+            "name": "temperature",
+            "type": "number",
+            "step": 0.1,
+            "description": "Temperature parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 0.7,
+            "id": "awsChatBedrock_2-input-temperature-number"
+          },
+          {
+            "label": "Max Tokens to Sample",
+            "name": "max_tokens_to_sample",
+            "type": "number",
+            "step": 10,
+            "description": "Max Tokens parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 200,
+            "id": "awsChatBedrock_2-input-max_tokens_to_sample-number"
+          },
+          {
+            "label": "Allow Image Uploads",
+            "name": "allowImageUploads",
+            "type": "boolean",
+            "description": "Allow image input. Refer to the <a href=\"https://docs.flowiseai.com/using-flowise/uploads#image\" target=\"_blank\">docs</a> for more details.",
+            "default": false,
+            "optional": true,
+            "id": "awsChatBedrock_2-input-allowImageUploads-boolean"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Cache",
+            "name": "cache",
+            "type": "BaseCache",
+            "optional": true,
+            "id": "awsChatBedrock_2-input-cache-BaseCache"
+          }
+        ],
+        "inputs": {
+          "cache": "",
+          "region": "eu-central-1",
+          "model": "anthropic.claude-3.5-sonnet-20240620-v1:0",
+          "customModel": "anthropic.claude-3-5-sonnet-20240620-v1:0",
+          "streaming": true,
+          "temperature": 0.7,
+          "max_tokens_to_sample": 200,
+          "allowImageUploads": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "awsChatBedrock_2-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+            "name": "awsChatBedrock",
+            "label": "AWSChatBedrock",
+            "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+            "type": "AWSChatBedrock | BaseChatModel | BaseLanguageModel | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 766,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 574.9064816270808,
+        "y": 1267.2043742232154
+      },
+      "dragging": false
+    },
+    {
+      "id": "worker_3",
+      "position": {
+        "x": 1869.9541783257957,
+        "y": 1265.7990712184862
+      },
+      "type": "customNode",
+      "data": {
+        "id": "worker_3",
+        "label": "Worker",
+        "version": 2,
+        "name": "worker",
+        "type": "Worker",
+        "baseClasses": [
+          "Worker"
+        ],
+        "category": "Multi Agents",
+        "inputParams": [
+          {
+            "label": "Worker Name",
+            "name": "workerName",
+            "type": "string",
+            "placeholder": "Worker",
+            "id": "worker_3-input-workerName-string"
+          },
+          {
+            "label": "Worker Prompt",
+            "name": "workerPrompt",
+            "type": "string",
+            "rows": 4,
+            "default": "You are a research assistant who can search for up-to-date info using search engine.",
+            "id": "worker_3-input-workerPrompt-string"
+          },
+          {
+            "label": "Format Prompt Values",
+            "name": "promptValues",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "id": "worker_3-input-promptValues-json"
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "worker_3-input-maxIterations-number"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "worker_3-input-tools-Tool"
+          },
+          {
+            "label": "Supervisor",
+            "name": "supervisor",
+            "type": "Supervisor",
+            "id": "worker_3-input-supervisor-Supervisor"
+          },
+          {
+            "label": "Tool Calling Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "description": "Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat. If not specified, supervisor's model will be used",
+            "id": "worker_3-input-model-BaseChatModel"
+          }
+        ],
+        "inputs": {
+          "workerName": "readme_builder_agent",
+          "workerPrompt": "Role: README Builder – a specialised Worker that turns the other agents’ outputs (code, documentation notes, decisions) into a polished README.md.\nCalled by: the Supervisor. Handle exactly one delegated task and report back. \nFlowiseAI",
+          "tools": [
+            "{{customMCP_7.data.instance}}"
+          ],
+          "supervisor": "{{supervisor_0.data.instance}}",
+          "model": "{{awsChatBedrock_3.data.instance}}",
+          "promptValues": "",
+          "maxIterations": ""
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 723,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1869.9541783257957,
+        "y": 1265.7990712184862
+      },
+      "dragging": false
+    },
+    {
+      "id": "awsChatBedrock_3",
+      "position": {
+        "x": 2202.899298716401,
+        "y": 1265.0922814444327
+      },
+      "type": "customNode",
+      "data": {
+        "id": "awsChatBedrock_3",
+        "label": "AWS ChatBedrock",
+        "version": 6,
+        "name": "awsChatBedrock",
+        "type": "AWSChatBedrock",
+        "baseClasses": [
+          "AWSChatBedrock",
+          "BaseChatModel",
+          "BaseLanguageModel",
+          "Runnable"
+        ],
+        "category": "Chat Models",
+        "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+        "inputParams": [
+          {
+            "label": "AWS Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "awsApi"
+            ],
+            "optional": true,
+            "id": "awsChatBedrock_3-input-credential-credential"
+          },
+          {
+            "label": "Region",
+            "name": "region",
+            "type": "asyncOptions",
+            "loadMethod": "listRegions",
+            "default": "us-east-1",
+            "id": "awsChatBedrock_3-input-region-asyncOptions"
+          },
+          {
+            "label": "Model Name",
+            "name": "model",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "default": "anthropic.claude-3-haiku-20240307-v1:0",
+            "id": "awsChatBedrock_3-input-model-asyncOptions"
+          },
+          {
+            "label": "Custom Model Name",
+            "name": "customModel",
+            "description": "If provided, will override model selected from Model Name option",
+            "type": "string",
+            "optional": true,
+            "id": "awsChatBedrock_3-input-customModel-string"
+          },
+          {
+            "label": "Streaming",
+            "name": "streaming",
+            "type": "boolean",
+            "default": true,
+            "optional": true,
+            "additionalParams": true,
+            "id": "awsChatBedrock_3-input-streaming-boolean"
+          },
+          {
+            "label": "Temperature",
+            "name": "temperature",
+            "type": "number",
+            "step": 0.1,
+            "description": "Temperature parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 0.7,
+            "id": "awsChatBedrock_3-input-temperature-number"
+          },
+          {
+            "label": "Max Tokens to Sample",
+            "name": "max_tokens_to_sample",
+            "type": "number",
+            "step": 10,
+            "description": "Max Tokens parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 200,
+            "id": "awsChatBedrock_3-input-max_tokens_to_sample-number"
+          },
+          {
+            "label": "Allow Image Uploads",
+            "name": "allowImageUploads",
+            "type": "boolean",
+            "description": "Allow image input. Refer to the <a href=\"https://docs.flowiseai.com/using-flowise/uploads#image\" target=\"_blank\">docs</a> for more details.",
+            "default": false,
+            "optional": true,
+            "id": "awsChatBedrock_3-input-allowImageUploads-boolean"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Cache",
+            "name": "cache",
+            "type": "BaseCache",
+            "optional": true,
+            "id": "awsChatBedrock_3-input-cache-BaseCache"
+          }
+        ],
+        "inputs": {
+          "cache": "",
+          "region": "eu-central-1",
+          "model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "customModel": "eu.anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "streaming": true,
+          "temperature": 0.7,
+          "max_tokens_to_sample": "8192",
+          "allowImageUploads": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "awsChatBedrock_3-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+            "name": "awsChatBedrock",
+            "label": "AWSChatBedrock",
+            "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+            "type": "AWSChatBedrock | BaseChatModel | BaseLanguageModel | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 766,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2202.899298716401,
+        "y": 1265.0922814444327
+      },
+      "dragging": false
+    },
+    {
+      "id": "worker_2",
+      "position": {
+        "x": 1143.0058549971704,
+        "y": -1075.120255915175
+      },
+      "type": "customNode",
+      "data": {
+        "id": "worker_2",
+        "label": "Worker",
+        "version": 2,
+        "name": "worker",
+        "type": "Worker",
+        "baseClasses": [
+          "Worker"
+        ],
+        "category": "Multi Agents",
+        "inputParams": [
+          {
+            "label": "Worker Name",
+            "name": "workerName",
+            "type": "string",
+            "placeholder": "Worker",
+            "id": "worker_2-input-workerName-string"
+          },
+          {
+            "label": "Worker Prompt",
+            "name": "workerPrompt",
+            "type": "string",
+            "rows": 4,
+            "default": "You are a research assistant who can search for up-to-date info using search engine.",
+            "id": "worker_2-input-workerPrompt-string"
+          },
+          {
+            "label": "Format Prompt Values",
+            "name": "promptValues",
+            "type": "json",
+            "optional": true,
+            "acceptVariable": true,
+            "list": true,
+            "id": "worker_2-input-promptValues-json"
+          },
+          {
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
+            "optional": true,
+            "id": "worker_2-input-maxIterations-number"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "optional": true,
+            "id": "worker_2-input-tools-Tool"
+          },
+          {
+            "label": "Supervisor",
+            "name": "supervisor",
+            "type": "Supervisor",
+            "id": "worker_2-input-supervisor-Supervisor"
+          },
+          {
+            "label": "Tool Calling Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "optional": true,
+            "description": "Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat. If not specified, supervisor's model will be used",
+            "id": "worker_2-input-model-BaseChatModel"
+          }
+        ],
+        "inputs": {
+          "workerName": "github_agent",
+          "workerPrompt": "Role: GitHub Agent – Help other agents—or the user—inspect, change, and automate GitHub repositories by calling the tools exposed to.\nCalled by: the Supervisor node. Perform exactly one delegated task at a time and return the result to the Supervisor.",
+          "tools": [
+            "{{customMCP_3.data.instance}}",
+            "{{customMCP_4.data.instance}}",
+            "{{customMCP_5.data.instance}}"
+          ],
+          "supervisor": "{{supervisor_0.data.instance}}",
+          "model": "{{awsChatBedrock_4.data.instance}}",
+          "promptValues": "",
+          "maxIterations": ""
+        },
+        "outputAnchors": [],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 723,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1143.0058549971704,
+        "y": -1075.120255915175
+      },
+      "dragging": false
+    },
+    {
+      "id": "awsChatBedrock_4",
+      "position": {
+        "x": 1590.4442016266823,
+        "y": -1113.9086429659667
+      },
+      "type": "customNode",
+      "data": {
+        "id": "awsChatBedrock_4",
+        "label": "AWS ChatBedrock",
+        "version": 6,
+        "name": "awsChatBedrock",
+        "type": "AWSChatBedrock",
+        "baseClasses": [
+          "AWSChatBedrock",
+          "BaseChatModel",
+          "BaseLanguageModel",
+          "Runnable"
+        ],
+        "category": "Chat Models",
+        "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+        "inputParams": [
+          {
+            "label": "AWS Credential",
+            "name": "credential",
+            "type": "credential",
+            "credentialNames": [
+              "awsApi"
+            ],
+            "optional": true,
+            "id": "awsChatBedrock_4-input-credential-credential"
+          },
+          {
+            "label": "Region",
+            "name": "region",
+            "type": "asyncOptions",
+            "loadMethod": "listRegions",
+            "default": "us-east-1",
+            "id": "awsChatBedrock_4-input-region-asyncOptions"
+          },
+          {
+            "label": "Model Name",
+            "name": "model",
+            "type": "asyncOptions",
+            "loadMethod": "listModels",
+            "default": "anthropic.claude-3-haiku-20240307-v1:0",
+            "id": "awsChatBedrock_4-input-model-asyncOptions"
+          },
+          {
+            "label": "Custom Model Name",
+            "name": "customModel",
+            "description": "If provided, will override model selected from Model Name option",
+            "type": "string",
+            "optional": true,
+            "id": "awsChatBedrock_4-input-customModel-string"
+          },
+          {
+            "label": "Streaming",
+            "name": "streaming",
+            "type": "boolean",
+            "default": true,
+            "optional": true,
+            "additionalParams": true,
+            "id": "awsChatBedrock_4-input-streaming-boolean"
+          },
+          {
+            "label": "Temperature",
+            "name": "temperature",
+            "type": "number",
+            "step": 0.1,
+            "description": "Temperature parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 0.7,
+            "id": "awsChatBedrock_4-input-temperature-number"
+          },
+          {
+            "label": "Max Tokens to Sample",
+            "name": "max_tokens_to_sample",
+            "type": "number",
+            "step": 10,
+            "description": "Max Tokens parameter may not apply to certain model. Please check available model parameters",
+            "optional": true,
+            "additionalParams": true,
+            "default": 200,
+            "id": "awsChatBedrock_4-input-max_tokens_to_sample-number"
+          },
+          {
+            "label": "Allow Image Uploads",
+            "name": "allowImageUploads",
+            "type": "boolean",
+            "description": "Allow image input. Refer to the <a href=\"https://docs.flowiseai.com/using-flowise/uploads#image\" target=\"_blank\">docs</a> for more details.",
+            "default": false,
+            "optional": true,
+            "id": "awsChatBedrock_4-input-allowImageUploads-boolean"
+          }
+        ],
+        "inputAnchors": [
+          {
+            "label": "Cache",
+            "name": "cache",
+            "type": "BaseCache",
+            "optional": true,
+            "id": "awsChatBedrock_4-input-cache-BaseCache"
+          }
+        ],
+        "inputs": {
+          "cache": "",
+          "region": "eu-central-1",
+          "model": "anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "customModel": "eu.anthropic.claude-3-7-sonnet-20250219-v1:0",
+          "streaming": true,
+          "temperature": 0.7,
+          "max_tokens_to_sample": "8192",
+          "allowImageUploads": ""
+        },
+        "outputAnchors": [
+          {
+            "id": "awsChatBedrock_4-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+            "name": "awsChatBedrock",
+            "label": "AWSChatBedrock",
+            "description": "Wrapper around AWS Bedrock large language models that use the Converse API",
+            "type": "AWSChatBedrock | BaseChatModel | BaseLanguageModel | Runnable"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 766,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1590.4442016266823,
+        "y": -1113.9086429659667
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_1",
+      "position": {
+        "x": 2917.129313170979,
+        "y": -1143.047747328837
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_1",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_1-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_1-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n      \"command\": \"docker\",\n      \"args\": [\n        \"run\",\n        \"-i\",\n        \"--rm\",\n        \"-v\",\n        \"/tmp/mcp:/tmp/mcp\",\n        \"-e\",\n        \"GITHUB_PERSONAL_ACCESS_TOKEN\",\n        \"mcp/github\"\n      ],\n      \"env\": {\n        \"GITHUB_PERSONAL_ACCESS_TOKEN\": \"<replace>\"\n      }\n}",
+          "mcpActions": "[\"create_or_update_file\",\"create_repository\",\"get_file_contents\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_1-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 627,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2917.129313170979,
+        "y": -1143.047747328837
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_3",
+      "position": {
+        "x": 2563.415925110346,
+        "y": -1092.8713044811427
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_3",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_3-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_3-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n      \"command\": \"docker\",\n      \"args\": [\n        \"run\",\n        \"-i\",\n        \"--platform\",\n        \"linux/amd64\",\n        \"-v\",\n        \"/tmp/mcp:/tmp/mcp\",\n        \"--rm\",\n        \"ghcr.io/mark3labs/mcp-filesystem-server:latest\",\n        \"/tmp/mcp\"\n      ]\n}",
+          "mcpActions": "[\"copy_file\",\"create_directory\",\"delete_file\",\"get_file_info\",\"list_allowed_directories\",\"list_directory\",\"move_file\",\"read_file\",\"read_multiple_files\",\"search_files\",\"tree\",\"write_file\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_3-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 826,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2563.415925110346,
+        "y": -1092.8713044811427
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_4",
+      "position": {
+        "x": 2107.078591246731,
+        "y": -2268.455132286672
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_4",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_4-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_4-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n      \"command\": \"npx\",\n      \"args\": [\n        \"@cyanheads/git-mcp-server\"\n      ],\n}",
+          "mcpActions": "[\"git_add\",\"git_branch\",\"git_checkout\",\"git_cherry_pick\",\"git_clean\",\"git_clear_working_dir\",\"git_clone\",\"git_commit\",\"git_diff\",\"git_fetch\",\"git_init\",\"git_log\",\"git_merge\",\"git_pull\",\"git_push\",\"git_rebase\",\"git_remote\",\"git_reset\",\"git_set_working_dir\",\"git_show\",\"git_stash\",\"git_status\",\"git_tag\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_4-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 1078,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2107.078591246731,
+        "y": -2268.455132286672
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_5",
+      "position": {
+        "x": 2592.9210960831383,
+        "y": -1896.960366096644
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_5",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_5-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_5-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n      \"command\": \"npx\",\n      \"args\": [\"mcp-server-commands\"]\n}",
+          "mcpActions": "[\"run_command\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_5-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 571,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2592.9210960831383,
+        "y": -1896.960366096644
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_6",
+      "position": {
+        "x": 1829.9923415077733,
+        "y": -109.21042844913312
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_6",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_6-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_6-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  \"command\": \"npx\",\n  \"args\": [\"mcp-server-commands\"],\n  \"env\": {\n    \"PULUMI_ACCESS_TOKEN\": \"<replace>\"\n  }\n}",
+          "mcpActions": "[\"run_command\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_6-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 571,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1829.9923415077733,
+        "y": -109.21042844913312
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_7",
+      "position": {
+        "x": 2563.781348307023,
+        "y": 1274.0102687390984
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_7",
+        "label": "Custom MCP",
+        "version": 1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_7-input-mcpServerConfig-code"
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_7-input-mcpActions-asyncMultiOptions"
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n      \"command\": \"docker\",\n      \"args\": [\n        \"run\",\n        \"-i\",\n        \"--platform\",\n        \"linux/amd64\",\n        \"-v\",\n        \"/tmp/mcp:/tmp/mcp\",\n        \"--rm\",\n        \"ghcr.io/mark3labs/mcp-filesystem-server:latest\",\n        \"/tmp/mcp\"\n      ]\n}",
+          "mcpActions": "[\"copy_file\",\"create_directory\",\"delete_file\",\"get_file_info\",\"list_allowed_directories\",\"list_directory\",\"move_file\",\"read_file\",\"read_multiple_files\",\"search_files\",\"tree\",\"write_file\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_7-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 826,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2563.781348307023,
+        "y": 1274.0102687390984
+      },
+      "dragging": false
+    }
+  ],
+  "edges": [
+    {
+      "source": "awsChatBedrock_0",
+      "sourceHandle": "awsChatBedrock_0-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+      "target": "worker_0",
+      "targetHandle": "worker_0-input-model-BaseChatModel",
+      "type": "buttonedge",
+      "id": "awsChatBedrock_0-awsChatBedrock_0-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable-worker_0-worker_0-input-model-BaseChatModel"
+    },
+    {
+      "source": "awsChatBedrock_1",
+      "sourceHandle": "awsChatBedrock_1-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+      "target": "supervisor_0",
+      "targetHandle": "supervisor_0-input-model-BaseChatModel",
+      "type": "buttonedge",
+      "id": "awsChatBedrock_1-awsChatBedrock_1-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable-supervisor_0-supervisor_0-input-model-BaseChatModel"
+    },
+    {
+      "source": "customMCP_2",
+      "sourceHandle": "customMCP_2-output-customMCP-Tool",
+      "target": "worker_1",
+      "targetHandle": "worker_1-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_2-customMCP_2-output-customMCP-Tool-worker_1-worker_1-input-tools-Tool"
+    },
+    {
+      "source": "awsChatBedrock_2",
+      "sourceHandle": "awsChatBedrock_2-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+      "target": "worker_1",
+      "targetHandle": "worker_1-input-model-BaseChatModel",
+      "type": "buttonedge",
+      "id": "awsChatBedrock_2-awsChatBedrock_2-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable-worker_1-worker_1-input-model-BaseChatModel"
+    },
+    {
+      "source": "awsChatBedrock_3",
+      "sourceHandle": "awsChatBedrock_3-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+      "target": "worker_3",
+      "targetHandle": "worker_3-input-model-BaseChatModel",
+      "type": "buttonedge",
+      "id": "awsChatBedrock_3-awsChatBedrock_3-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable-worker_3-worker_3-input-model-BaseChatModel"
+    },
+    {
+      "source": "awsChatBedrock_4",
+      "sourceHandle": "awsChatBedrock_4-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable",
+      "target": "worker_2",
+      "targetHandle": "worker_2-input-model-BaseChatModel",
+      "type": "buttonedge",
+      "id": "awsChatBedrock_4-awsChatBedrock_4-output-awsChatBedrock-AWSChatBedrock|BaseChatModel|BaseLanguageModel|Runnable-worker_2-worker_2-input-model-BaseChatModel"
+    },
+    {
+      "source": "supervisor_0",
+      "sourceHandle": "supervisor_0-output-supervisor-Supervisor",
+      "target": "worker_2",
+      "targetHandle": "worker_2-input-supervisor-Supervisor",
+      "type": "buttonedge",
+      "id": "supervisor_0-supervisor_0-output-supervisor-Supervisor-worker_2-worker_2-input-supervisor-Supervisor"
+    },
+    {
+      "source": "customMCP_3",
+      "sourceHandle": "customMCP_3-output-customMCP-Tool",
+      "target": "worker_2",
+      "targetHandle": "worker_2-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_3-customMCP_3-output-customMCP-Tool-worker_2-worker_2-input-tools-Tool"
+    },
+    {
+      "source": "customMCP_4",
+      "sourceHandle": "customMCP_4-output-customMCP-Tool",
+      "target": "worker_2",
+      "targetHandle": "worker_2-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_4-customMCP_4-output-customMCP-Tool-worker_2-worker_2-input-tools-Tool"
+    },
+    {
+      "source": "supervisor_0",
+      "sourceHandle": "supervisor_0-output-supervisor-Supervisor",
+      "target": "worker_0",
+      "targetHandle": "worker_0-input-supervisor-Supervisor",
+      "type": "buttonedge",
+      "id": "supervisor_0-supervisor_0-output-supervisor-Supervisor-worker_0-worker_0-input-supervisor-Supervisor"
+    },
+    {
+      "source": "sqliteAgentMemory_0",
+      "sourceHandle": "sqliteAgentMemory_0-output-sqliteAgentMemory-SQLiteAgentMemory|BaseCheckpointSaver",
+      "target": "supervisor_0",
+      "targetHandle": "supervisor_0-input-agentMemory-BaseCheckpointSaver",
+      "type": "buttonedge",
+      "id": "sqliteAgentMemory_0-sqliteAgentMemory_0-output-sqliteAgentMemory-SQLiteAgentMemory|BaseCheckpointSaver-supervisor_0-supervisor_0-input-agentMemory-BaseCheckpointSaver"
+    },
+    {
+      "source": "customMCP_5",
+      "sourceHandle": "customMCP_5-output-customMCP-Tool",
+      "target": "worker_2",
+      "targetHandle": "worker_2-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_5-customMCP_5-output-customMCP-Tool-worker_2-worker_2-input-tools-Tool"
+    },
+    {
+      "source": "customMCP_6",
+      "sourceHandle": "customMCP_6-output-customMCP-Tool",
+      "target": "worker_0",
+      "targetHandle": "worker_0-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_6-customMCP_6-output-customMCP-Tool-worker_0-worker_0-input-tools-Tool"
+    },
+    {
+      "source": "supervisor_0",
+      "sourceHandle": "supervisor_0-output-supervisor-Supervisor",
+      "target": "worker_3",
+      "targetHandle": "worker_3-input-supervisor-Supervisor",
+      "type": "buttonedge",
+      "id": "supervisor_0-supervisor_0-output-supervisor-Supervisor-worker_3-worker_3-input-supervisor-Supervisor"
+    },
+    {
+      "source": "customMCP_7",
+      "sourceHandle": "customMCP_7-output-customMCP-Tool",
+      "target": "worker_3",
+      "targetHandle": "worker_3-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_7-customMCP_7-output-customMCP-Tool-worker_3-worker_3-input-tools-Tool"
+    }
+  ]
+}
