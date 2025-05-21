@@ -18,7 +18,7 @@ The `github_agent` to clone `https://github.com/dirien/blueprints` and copy the 
 Then create a `/tmp/mcp/do-kubernetes-argocd/Pulumi.dev.yaml` file with following content:
 
 ```yaml
-environments:
+environment:
 - pulumi-ultimate-gitops/dev
 ```
 
